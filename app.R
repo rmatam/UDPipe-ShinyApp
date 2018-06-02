@@ -11,6 +11,8 @@
 
 library("shiny")
 
-#shinyApp(ui = ui, server = server)
+# Add the dependent libraries
 source('https://raw.githubusercontent.com/rmatam/UDPipe-ShinyApp/master/dependency-UDPipe-shinyApp.R')
+
+# Run the project in github repository
 runGitHub('UDPipe-ShinyApp','rmatam')
