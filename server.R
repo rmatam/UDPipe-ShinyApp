@@ -11,6 +11,8 @@
 
 # get data first
 require(stringr)
+getwd()
+setwd('F:\\ISB\\Residency\\Residency2\\TA\\Session 5 Files-20180418\\TA_Assignment2')
 
 shinyServer(function(input, output) {
   
@@ -29,12 +31,12 @@ shinyServer(function(input, output) {
   
   english_model = reactive({
     # load english model for annotation from working dir
-    english_model = udpipe_load_model("F:\\ISB\\Residency\\Residency2\\TA\\Session 5 Files-20180418\\TA_Assignment2\\english-ud-2.0-170801.udpipe")  # file_model only needed
+    english_model = udpipe_load_model("english-ud-2.0-170801.udpipe")  # file_model only needed
     return(english_model)
   })
   
   annot.obj = reactive({
-    x <- udpipe_annotate(english_model(),x=Dataset())
+    x <- udpipe_annotate(english_model(),x = Dataset())
     x <- as.data.frame(x)
     return(x)
   })
@@ -59,7 +61,7 @@ shinyServer(function(input, output) {
   output$wcplot1 = renderPlot({
     if(is.null(input$file)){return(NULL)}
     else{
-      all_nouns = x %>% subset(., upos %in% "NOUN") 
+      all_nouns = annot.obj() %>% subset(., upos %in% "NOUN") 
       top_nouns = txt_freq(all_nouns$lemma)  # txt_freq() calcs noun freqs in desc order
       
       wordcloud(top_nouns$key,top_nouns$freq, min.freq = 3,colors = 1:10 )
@@ -69,7 +71,7 @@ shinyServer(function(input, output) {
   output$wcplot2 = renderPlot({
     if(is.null(input$file)){return(NULL)}
     else{
-      all_verbs = x %>% subset(., upos %in% "VERB") 
+      all_verbs = annot.obj() %>% subset(., upos %in% "VERB") 
       top_verbs = txt_freq(all_verbs$lemma)
       
       wordcloud(top_verbs$key,top_verbs$freq, min.freq = 3,colors = 1:10 )
